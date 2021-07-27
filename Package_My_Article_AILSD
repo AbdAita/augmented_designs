@@ -1,0 +1,10 @@
+  one=matrix(1,length(y),1)
+  x1=as.matrix(table(obs,row))
+  b=ncol(x1)
+  x2=as.matrix(table(obs,column))
+  x3=as.matrix(table(obs,treatment))
+  m=ncol(x3)
+  x4=as.matrix(table(obs,type))
+  sumcheck=t(x4[,1])%*%y
+  sumtest=t(x4[,2])%*%y
+  SBT=c()
