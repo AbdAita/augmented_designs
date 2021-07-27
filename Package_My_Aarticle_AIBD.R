@@ -1,4 +1,4 @@
-aov1.ARIBD = function(obs, block, treatment,type, y,W,Z) 
+aov1.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -42,8 +42,8 @@ aov1.ARIBD = function(obs, block, treatment,type, y,W,Z)
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=W
-  j=Z
+  i=n_block 
+  j=n_check
   mu_b=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
   P=((sum(yBi..^2)-(yBi..[i]^2))/c)+((b*yBi..[i]-(sum(yBM..)-yBM..[j]))*(yBi..[i]+(yBM..[j])/(b-1))/(b*(c-1)))-(mu_b*(sum(yBi..)-yBi..[i]))
   TT=(sum(yBM..^2)-yBM..[j]^2)/b+yBM..[j]^2/(b-1)+sum(yBMjg^2)-sum(yB...^2/(c+h))+(yB...[i]^2/(c+h[i]))-(yB...[i]^2/(c+h[i]-1))+P
@@ -80,7 +80,7 @@ aov1.ARIBD = function(obs, block, treatment,type, y,W,Z)
 } 
 ###############################################################
 ###############################################################
-aov2.ARIBD = function(obs, block, treatment,type, y,W,Z) 
+aov2.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -124,8 +124,8 @@ aov2.ARIBD = function(obs, block, treatment,type, y,W,Z)
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=W
-  j=Z
+  i=n_block 
+  j=n_check
   mu_b=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
   P=((sum(yBi..^2)-(yBi..[i]^2))/c)+((b*yBi..[i]-(sum(yBM..)-yBM..[j]))*(yBi..[i]+(yBM..[j])/(b-1))/(b*(c-1)))-(mu_b*(sum(yBi..)-yBi..[i]))
   TT=(sum(yBM..^2)-yBM..[j]^2)/b+yBM..[j]^2/(b-1)+sum(yBMjg^2)-sum(yB...^2/(c+h))+(yB...[i]^2/(c+h[i]))-(yB...[i]^2/(c+h[i]-1))+P
@@ -165,13 +165,11 @@ aov2.ARIBD = function(obs, block, treatment,type, y,W,Z)
   return(anova.table)
 } 
 ########################################
-########################################
-aov.ARIBD = function(obs, block, treatment,type, y, W, Z)
+######################################## 
+aov.ARIBD = function(obs, block, treatment,type, y, n_block , n_check)
 {
-  output1=aov1.ARIBD(obs, block, treatment,type, y, W, Z) 
-  output2=aov2.ARIBD(obs, block, treatment,type, y, W, Z)
+  output1=aov1.ARIBD(obs, block, treatment,type, y, n_block , n_check) 
+  output2=aov2.ARIBD(obs, block, treatment,type, y, n_block , n_check)
   newlist <- list(output1,output2) 
   return(newlist)
 }
-
-#
