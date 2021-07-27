@@ -174,3 +174,4 @@ aov.ARIBD = function(obs, block, treatment,type, y, W, Z)
   return(newlist)
 }
 
+#
