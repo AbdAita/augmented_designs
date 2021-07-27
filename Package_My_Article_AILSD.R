@@ -8,3 +8,5 @@
   sumcheck=t(x4[,1])%*%y
   sumtest=t(x4[,2])%*%y
   SBT=c()
+####
+  sdf
