@@ -150,14 +150,14 @@ R_reduce=y....*mu_star+sum(yB...*alpha_star)+sum(y.M..*beta_star)
   treatmentF=meanT/meanE
   checkF=meanCheck/meanE
   newF=meanNew/meanE
-  New_vs._checkSSF=meanNew_vs._checkSS/meanE
+  #New_vs._checkSSF=meanNew_vs._checkSS/meanE
   New_and_new_vs._checkF=meanNew_and_new_vs._check/meanE
   p.value.block=pf(rowF, df1=(b-1), df2=dfE, ncp=0, lower.tail = FALSE)
   p.value.block=pf(columnF, df1=(b-1), df2=dfE, ncp=0, lower.tail = FALSE)
   p.value.treatment=pf(treatmentF, df1=(m-1), df2=dfE, ncp=0, lower.tail = FALSE)
   p.value.check=pf(checkF, df1=(c-1), df2=dfE, ncp=0, lower.tail = FALSE)
   p.value.new=pf(newF, df1=(n_t-1), df2=dfE, ncp=0, lower.tail = FALSE)
-  p.value.new_vs._check=pf(New_vs._checkSSF, df1=(m-c), df2=dfE, ncp=0, lower.tail = FALSE)
+  #p.value.new_vs._check=pf(New_vs._checkSSF, df1=(m-c), df2=dfE, ncp=0, lower.tail = FALSE)
   p.value.new_and_new_vs._check=pf(New_and_new_vs._checkF, df1=(m-c), df2=dfE, ncp=0, lower.tail = FALSE)
   df=c(b-1,b-1,m-1,c-1,m-c,dfE,N-1)
   ss=c(rowSSunadj,columnSSunadj,treatmentSSadj,checkSS,new_and_new_vs._checkSS,errorSS,totalSS)
@@ -220,15 +220,15 @@ aov.AILSD2 = function(obs,row,column,treatment,type, y,n_row,n_column,n_check)
   y....=t(one)%*%y
   yB...=t(x1)%*%y
   y.M..=t(x2)%*%y
+  n_c=colSums(x4)[1]
+  n_t=colSums(x4)[2]
+  c=length(yB..k)
   k1=colSums(x1)
   k2=colSums(x2)
   S=n_t+1
   SS=n_t+c
   k3=colSums(x3[,S:SS])
   N=sum(k1)
-  n_c=colSums(x4)[1]
-  n_t=colSums(x4)[2]
-  c=length(yB..k)
   i=n_row
   j=n_column
   k=n_check
