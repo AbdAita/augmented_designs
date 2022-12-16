@@ -1,4 +1,4 @@
-mu.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
+mu.ARIBD_L = function(obs, block, treatment,type, y,n_block,n_check) 
 {
 one=matrix(1,length(y),1)
 x1=as.matrix(table(obs,block))
@@ -60,11 +60,11 @@ mu=(y....-((b-1)*(sum(yBM..)-yBM..[j])/b)-((b-2)*(yBM..[j])/(b-1))-sum(nn_new*be
 mu_RT=(y....-((nn_new[i]-1)*yB...[i])/(c+nn_new[i]-1)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
 mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]))/b-((b-2)*yBM..[j])/(b-1))/(n_t+c)
 anova.table=cbind(mu_q,mu,mu_RT,mu_RB)
-colnames(anova.table)=c("mu_q","mu","mu_RT","mu_RB")
+colnames(anova.table)=c("mu_q_L","mu_L","mu_RT_L","mu_RB_L")
 return(anova.table)
 } 
 ################################################################
-Beta.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
+Beta.ARIBD_L = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -133,11 +133,11 @@ Beta.ARIBD = function(obs, block, treatment,type, y,n_block,n_check)
     }
   }
   anova.table=cbind(beta,beta_RT)
-  colnames(anova.table)=c("beta","beta_RT")
+  colnames(anova.table)=c("beta_L","beta_RT_L")
   return(anova.table)
 } 
 ################################################################
-Check.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
+Check.ARIBD_L = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -221,11 +221,11 @@ Check.ARIBD = function(obs, block, treatment,type, y,n_block,n_check)
   check_tretment=CCC
   Rep_Check=cbind(check_tretment)
   anova.table=data.frame(Rep_Check,taucheck,taucheck_NB)
-  colnames(anova.table)=c("Rep_Check","taucheck","taucheck_NB")
+  colnames(anova.table)=c("Rep_Check_L","taucheck_L","taucheck_NB_L")
   return(anova.table)
 } 
 ################################################################
-New_treatment.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
+New_treatment.ARIBD_L = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -324,11 +324,11 @@ New_treatment.ARIBD = function(obs, block, treatment,type, y,n_block,n_check)
   }
   taunew_RB=cbind(tau_new_RB)
   anova.table=data.frame(New_Treatment,taunew,taunew_RB)
-  colnames(anova.table)=c("New_Treatment","taunew","taunew_RB")
+  colnames(anova.table)=c("New_Treatment_L","taunew_L","taunew_RB_L")
   return(anova.table)
 } 
 ################################################################
-aov1.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
+aov1.ARIBD_L = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -404,13 +404,13 @@ aov1.ARIBD = function(obs, block, treatment,type, y,n_block,n_check)
   F=c(NA,treatmentF,checkF,New_and_new_vs._checkF,NA,NA)
   p.value=c(NA,p.value.treatment,p.value.check,p.value.new_and_new_vs._check,NA,NA)
   anova.table=cbind(df,ss,ms,F, p.value)
-  rownames(anova.table)=c("Block(Unadj.)","Treatment(Adj.)","  Check(Adj.)","  New & new vs. check","Error","Total")
+  rownames(anova.table)=c("Block(Unadj.)_L","Treatment(Adj.)_L","  Check(Adj.)_L","  New & new vs. check_L","Error_L","Total_L")
   colnames(anova.table)=c("Df", "Sum Sq","Mean Sq", "F-value","P-value")
   return(anova.table)
 } 
 ###############################################################
 ###############################################################
-aov2.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
+aov2.ARIBD_L = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -490,20 +490,20 @@ aov2.ARIBD = function(obs, block, treatment,type, y,n_block,n_check)
   F=c(blockF,NA,checkF1,newF,new_vs._checkF1,NA,NA)
   p.value=c(p.value.block,NA,p.value.check,p.value.new,p.value.new_vs._check,NA,NA)
   anova.table=cbind(df,ss,ms,F, p.value)
-  rownames(anova.table)=c("Block(Adj.)","Treatment(Unadj.)","  Check(Unadj.)","  New","  New vs. check","Error","Total")
+  rownames(anova.table)=c("Block(Adj.)_L","Treatment(Unadj.)_L","  Check(Unadj.)_L","  New_L","  New vs. check_L","Error_L","Total_L")
   colnames(anova.table)=c("Df", "Sum Sq","Mean Sq", "F-value","P-value")
   return(anova.table)
 } 
 ########################################
 ######################################## 
-OMC.ARIBD = function(obs, block, treatment,type, y, n_block , n_check)
+OMC.ARIBD_L = function(obs, block, treatment,type, y, n_block , n_check)
 {
-  output1=mu.ARIBD(obs, block, treatment,type, y, n_block , n_check) 
-  output2=Beta.ARIBD(obs, block, treatment,type, y, n_block , n_check)
-  output3=Check.ARIBD(obs, block, treatment,type, y, n_block , n_check)
-  output4=New_treatment.ARIBD(obs, block, treatment,type, y, n_block , n_check) 
-  output5=aov1.ARIBD(obs, block, treatment,type, y, n_block , n_check)
-  output6=aov2.ARIBD(obs, block, treatment,type, y, n_block , n_check)
+  output1=mu.ARIBD_L(obs, block, treatment,type, y, n_block , n_check) 
+  output2=Beta.ARIBD_L(obs, block, treatment,type, y, n_block , n_check)
+  output3=Check.ARIBD_L(obs, block, treatment,type, y, n_block , n_check)
+  output4=New_treatment.ARIBD_L(obs, block, treatment,type, y, n_block , n_check) 
+  output5=aov1.ARIBD_L(obs, block, treatment,type, y, n_block , n_check)
+  output6=aov2.ARIBD_L(obs, block, treatment,type, y, n_block , n_check)
   newlist <- list(output1,output2,output3,output4,output5,output6) 
   return(newlist)
 }

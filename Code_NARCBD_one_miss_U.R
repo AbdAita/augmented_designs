@@ -1,4 +1,4 @@
-mu.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj) 
+mu.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -42,31 +42,29 @@ mu.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=n_block_i
-  ii=n_block_ii
-  j=n_check_j
-  jj=n_check_jj
+  i=n_block 
+  j=n_check
   nn_new=t(x1)%*%x4[,2]
   n_new=nn_new[1]
-  mu_q=((b*c-2*b-c)*sumcheck+c*(yBM..[j]+yBM..[jj])+2*b*yBi..[i])/(b*c*(b-1)*(c-2))
+  mu_q=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
   beta=c()
   for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
+    if(a==i){
+      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j])/(b*(c-1))
     }
     if(a!=i){
       beta[a]<-(yBi..[a])/c-mu_q
     }
   }
-  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj])/b)-((b-2)*(yBM..[j]+yBM..[jj])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((2-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
-  mu_RT=(y....-((nn_new[i]-2)*yB...[i])/(c+nn_new[i]-2)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
-  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj]))/b-((b-2)*(yBM..[j]+yBM..[jj])/(b-1)))/(n_t+c)
+  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j])/b)-((b-2)*(yBM..[j])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((1-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
+  mu_RT=(y....-((nn_new[i]-1)*yB...[i])/(c+nn_new[i]-1)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
+  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]))/b-((b-2)*yBM..[j])/(b-1))/(n_t+c)
   anova.table=cbind(mu_q,mu,mu_RT,mu_RB)
-  colnames(anova.table)=c("mu_q","mu","mu_RT","mu_RB")
+  colnames(anova.table)=c("mu_q_U","mu_U","mu_RT_U","mu_RB_U")
   return(anova.table)
 } 
 ################################################################
-Beta.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj) 
+Beta.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -110,40 +108,36 @@ Beta.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=n_block_i
-  ii=n_block_ii
-  j=n_check_j
-  jj=n_check_jj
+  i=n_block 
+  j=n_check
   nn_new=t(x1)%*%x4[,2]
   n_new=nn_new[1]
-  mu_q=((b*c-2*b-c)*sumcheck+c*(yBM..[j]+yBM..[jj])+2*b*yBi..[i])/(b*c*(b-1)*(c-2))
+  mu_q=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
   beta=c()
   for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
+    if(a==i){
+      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j])/(b*(c-1))
     }
     if(a!=i){
       beta[a]<-(yBi..[a])/c-mu_q
     }
   }
-  beta
-  mu_RT=(y....-((nn_new[i]-2)*yB...[i])/(c+nn_new[i]-2)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
+  mu_RT=(y....-((nn_new[i]-1)*yB...[i])/(c+nn_new[i]-1)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
   beta_RT=c()
   for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta_RT[a]<-(yB...[i])/(c+nn_new[a]-2)-mu_RT
+    if(a==i){
+      beta_RT[a]<-(yB...[i])/(c+nn_new[a]-1)-mu_RT
     }
     if(a!=i){
       beta_RT[a]<-(yB...[a])/(c+nn_new[a])-mu_RT
     }
   }
-  beta_RT
   anova.table=cbind(beta,beta_RT)
-  colnames(anova.table)=c("beta","beta_RT")
+  colnames(anova.table)=c("beta_U","beta_RT_U")
   return(anova.table)
 } 
 ################################################################
-Check.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj) 
+Check.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -187,46 +181,37 @@ Check.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_chec
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=n_block_i
-  ii=n_block_ii
-  j=n_check_j
-  jj=n_check_jj
+  i=n_block 
+  j=n_check
   nn_new=t(x1)%*%x4[,2]
   n_new=nn_new[1]
-  mu_q=((b*c-2*b-c)*sumcheck+c*(yBM..[j]+yBM..[jj])+2*b*yBi..[i])/(b*c*(b-1)*(c-2))
+  mu_q=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
   beta=c()
   for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
+    if(a==i){
+      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j])/(b*(c-1))
     }
     if(a!=i){
       beta[a]<-(yBi..[a])/c-mu_q
     }
   }
-  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj])/b)-((b-2)*(yBM..[j]+yBM..[jj])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((2-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
+  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j])/b)-((b-2)*(yBM..[j])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((1-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
   taucheck<-c()
   for (e in 1:c) { 
     if(e==j){
       taucheck[e]<-(yBM..[j]+beta[i])/(b-1)-mu
     }
-    if(e==jj){
-      taucheck[e]<-(yBM..[jj]+beta[i])/(b-1)-mu
-    }
-    if(e!=j & e!=jj){
+    if(e!=j){
       taucheck[e]<-(yBM..[e])/b-mu
     }
-  }
-  taucheck
-  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj]))/b-((b-2)*(yBM..[j]+yBM..[jj])/(b-1)))/(n_t+c)
+  }  
+  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]))/b-((b-2)*yBM..[j])/(b-1))/(n_t+c)
   taucheck_NB<-c()
   for (e in 1:c) { 
     if(e==j){
       taucheck_NB[e]<-yBM..[j]/(b-1)-mu_RB
     }
-    if(e==jj){
-      taucheck_NB[e]<-yBM..[jj]/(b-1)-mu_RB
-    }
-    if(e!=j & e!=jj){
+    if(e!=j){
       taucheck_NB[e]<-yBM..[e]/b-mu_RB
     }
   } 
@@ -236,11 +221,11 @@ Check.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_chec
   check_tretment=CCC
   Rep_Check=cbind(check_tretment)
   anova.table=data.frame(Rep_Check,taucheck,taucheck_NB)
-  colnames(anova.table)=c("Rep_Check","taucheck","taucheck_NB")
+  colnames(anova.table)=c("Rep_Check_U","taucheck_U","taucheck_NB_U")
   return(anova.table)
 } 
 ################################################################
-New_treatment.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
+New_treatment.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -284,24 +269,31 @@ New_treatment.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_i
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=n_block_i
-  ii=n_block_ii
-  j=n_check_j
-  jj=n_check_jj
+  i=n_block 
+  j=n_check
   nn_new=t(x1)%*%x4[,2]
   nn_new[1:2]
   n_new=nn_new[1]
-  mu_q=((b*c-2*b-c)*sumcheck+c*(yBM..[j]+yBM..[jj])+2*b*yBi..[i])/(b*c*(b-1)*(c-2))
+  mu_q=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
   beta=c()
   for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
+    if(a==i){
+      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j])/(b*(c-1))
     }
     if(a!=i){
       beta[a]<-(yBi..[a])/c-mu_q
     }
   }
-  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj])/b)-((b-2)*(yBM..[j]+yBM..[jj])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((2-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
+  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j])/b)-((b-2)*(yBM..[j])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((1-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
+  taucheck<-c()
+  for (e in 1:c) { 
+    if(e==j){
+      taucheck[e]<-(yBM..[j]+beta[i])/(b-1)-mu
+    }
+    if(e!=j){
+      taucheck[e]<-(yBM..[e])/b-mu
+    }
+  }  
   xx22=as.matrix(table(obs,1:N))
   BB<-t(xx22)%*%y
   AA<-t(xx22)%*%x4[,2]
@@ -309,34 +301,34 @@ New_treatment.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_i
   MM=M[apply(M!=0, 1, all),] 
   ff<-c()
   nnn<-0
-  for(iii in 1:b){
-    for(jjj in nnn+1:nn_new[iii]){ 
-      ff[jjj]=MM[jjj]-beta[iii]-mu
+  for(ii in 1:b){
+    for(jj in nnn+1:nn_new[ii]){ 
+      ff[jj]=MM[jj]-beta[ii]-mu
     }
-    nnn<-nnn+nn_new[iii]
+    nnn<-nnn+nn_new[ii]
   }
   ni<-0
   test_tretment<-c()
-  for(iii in 1:N){
-    if(AA[iii]==1){
+  for(ii in 1:N){
+    if(AA[ii]==1){
       ni<-ni+1
-      test_tretment[ni]<-treatment[iii]
+      test_tretment[ni]<-treatment[ii]
     }
   }
   New_Treatment=cbind(test_tretment)
   taunew=cbind(ff)
-  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj]))/b-((b-2)*(yBM..[j]+yBM..[jj])/(b-1)))/(n_t+c)
+  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]))/b-((b-2)*yBM..[j])/(b-1))/(n_t+c)
   tau_new_RB<-c()
   for (h in 1:n_t) {
     tau_new_RB[h]=MM[h]-mu_RB
   }
   taunew_RB=cbind(tau_new_RB)
   anova.table=data.frame(New_Treatment,taunew,taunew_RB)
-  colnames(anova.table)=c("New_Treatment","taunew","taunew_RB")
+  colnames(anova.table)=c("New_Treatment_U","taunew_U","taunew_RB_U")
   return(anova.table)
 } 
 ################################################################
-aov1.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
+aov1.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -380,134 +372,17 @@ aov1.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=n_block_i
-  ii=n_block_ii
-  j=n_check_j
-  jj=n_check_jj
-  nn_new=t(x1)%*%x4[,2]
-  n_new=nn_new[1]
-  mu_q=((b*c-2*b-c)*sumcheck+c*(yBM..[j]+yBM..[jj])+2*b*yBi..[i])/(b*c*(b-1)*(c-2))
-  beta=c()
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
-    }
-    if(a!=i){
-      beta[a]<-(yBi..[a])/c-mu_q
-    }
-  }
-  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj])/b)-((b-2)*(yBM..[j]+yBM..[jj])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((2-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
-  mu_RT=(y....-((nn_new[i]-2)*yB...[i])/(c+nn_new[i]-2)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
-  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj]))/b-((b-2)*(yBM..[j]+yBM..[jj])/(b-1)))/(n_t+c)
-  beta=c()
-  beta_RT=c()
-  taucheck<-c()
-  taucheck_NB<-c()
-  test_tretment<-c()
-  tau_new_RB<-c()
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
-    }
-    if(a!=i){
-      beta[a]<-(yBi..[a])/c-mu_q
-    }
-  }
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta_RT[a]<-(yB...[i])/(c+nn_new[a]-2)-mu_RT
-    }
-    if(a!=i){
-      beta_RT[a]<-(yB...[a])/(c+nn_new[a])-mu_RT
-    }
-  }
-  
-  for (e in 1:c) { 
-    if(e==j){
-      taucheck[e]<-(yBM..[j]+beta[i])/(b-1)-mu
-    }
-    if(e==jj){
-      taucheck[e]<-(yBM..[jj]+beta[i])/(b-1)-mu
-    }
-    if(e!=j & e!=jj){
-      taucheck[e]<-(yBM..[e])/b-mu
-    }
-  }
-  for (e in 1:c) { 
-    if(e==j){
-      taucheck_NB[e]<-yBM..[j]/(b-1)-mu_RB
-    }
-    if(e==jj){
-      taucheck_NB[e]<-yBM..[jj]/(b-1)-mu_RB
-    }
-    if(e!=j & e!=jj){
-      taucheck_NB[e]<-yBM..[e]/b-mu_RB
-    }
-  }
-  
-  xx22=as.matrix(table(obs,1:N))
-  BB<-t(xx22)%*%y
-  AA<-t(xx22)%*%x4[,2]
-  M<-AA*BB
-  MM=M[apply(M!=0, 1, all),] 
-  ff<-c()
-  nnn<-0
-  for(iii in 1:b){
-    for(jjj in nnn+1:nn_new[iii]){ 
-      ff[jjj]=MM[jjj]-beta[iii]-mu
-    }
-    nnn<-nnn+nn_new[iii]
-  }
-  ni<-0
-  for(iii in 1:N){
-    if(AA[iii]==1){
-      ni<-ni+1
-      test_tretment[ni]<-treatment[iii]
-    }
-  }
-  New_Treatment=cbind(test_tretment)
-  n_treatment=ff
-  taunew=cbind(ff)
-  for (h in 1:n_t) {
-    tau_new_RB[h]=MM[h]-mu_RB
-  }
-  taunew_RB=cbind(tau_new_RB)
-  #################################
-  R_full=y....*mu+sum(yB...*beta)+sum(yBM..*taucheck)+sum(yBMjg*n_treatment)
-  R_reduced_B=y....*mu_RB+sum(yBM..*taucheck_NB)+sum(yBMjg*tau_new_RB)
-  R_reduced_Tr=y....*mu_RT+sum(yB...*beta_RT)
-  #################################
-  blockSSadj=R_full- R_reduced_B
-  treatmentSSadj=R_full- R_reduced_Tr
+  i=n_block 
+  j=n_check
+  mu_q=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
+  P=((sum(yBi..^2)-(yBi..[i]^2))/c)+((b*yBi..[i]-(sum(yBM..)-yBM..[j]))*(yBi..[i]+(yBM..[j])/(b-1))/(b*(c-1)))-(mu_q*(sum(yBi..)-yBi..[i]))
+  TT=(sum(yBM..^2)-yBM..[j]^2)/b+yBM..[j]^2/(b-1)+sum(yBMjg^2)-sum(yB...^2/(c+h))+(yB...[i]^2/(c+h[i]))-(yB...[i]^2/(c+h[i]-1))+P
   blockSSunadj=sum(yB...^2/k1)-y....^2/(N)
   totalSS=t(y)%*%y-y....^2/(N)
+  treatmentSSadj=TT 
   errorSS=totalSS- blockSSunadj-treatmentSSadj
-  #############################
-  tauCheck<-c()
-  for (e in 1:c) { 
-    if(e==j){
-      tauCheck[e]<-(yBM..[j]+beta[i])/(b-1)-mu_q
-    }
-    if(e==jj){
-      tauCheck[e]<-(yBM..[jj]+beta[i])/(b-1)-mu_q
-    }
-    if(e!=j & e!=jj){
-      tauCheck[e]<-(yBM..[e])/b-mu_q
-    }
-  }
-  mq_RT=(sumcheck+(2*yBi..[i])/(c-2))/(c*b)
-  betaCheck_RT<-c()
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      betaCheck_RT[a]<-yBi..[i]/(c-2)-mq_RT
-    }
-    if(a!=i){
-      betaCheck_RT[a]<-yBi..[a]/c-mq_RT
-    }
-  }
-  R_full_check=sumcheck*mu_q+sum(yBi..*beta)+sum(yBM..*tauCheck)
-  R_reduced_check_Tr=sumcheck*mq_RT+sum(yBi..*betaCheck_RT)
-  checkSS=R_full_check- R_reduced_check_Tr
+  checkSS=sum(yBM..^2)/b+sum(yBi..^2)/c+((c*yBM..[j]+b*yBi..[i]-sumcheck)^2)/(c*b*(c-1)*(b-1))-(sumcheck^2)/(c*b)-(sum(yBi..^2)-(yBi..[i]^2))/c-(yBi..[i]^2)/(c-1)
+  newSS=sum(yBMjg^2)-(sum(yBMjg))^2/n_t
   new_and_new_vs._checkSS=treatmentSSadj-checkSS
   dfE=N-b-m+1 
   meanB=blockSSunadj/(b-1)
@@ -529,13 +404,13 @@ aov1.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check
   F=c(NA,treatmentF,checkF,New_and_new_vs._checkF,NA,NA)
   p.value=c(NA,p.value.treatment,p.value.check,p.value.new_and_new_vs._check,NA,NA)
   anova.table=cbind(df,ss,ms,F, p.value)
-  rownames(anova.table)=c("Block(Unadj.)","Treatment(Adj.)","  Check(Adj.)","  New & new vs. check","Error","Total")
+  rownames(anova.table)=c("Block(Unadj.)_U","Treatment(Adj.)_U","  Check(Adj.)_U","  New & new vs. check_U","Error_U","Total_U")
   colnames(anova.table)=c("Df", "Sum Sq","Mean Sq", "F-value","P-value")
   return(anova.table)
 } 
 ###############################################################
 ###############################################################
-aov2.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
+aov2.ARIBD = function(obs, block, treatment,type, y,n_block,n_check) 
 {
   one=matrix(1,length(y),1)
   x1=as.matrix(table(obs,block))
@@ -579,107 +454,16 @@ aov2.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check
   y.M..=t(x2)%*%y
   n_c=colSums(x4)[1]
   n_t=colSums(x4)[2]
-  i=n_block_i
-  ii=n_block_ii
-  j=n_check_j
-  jj=n_check_jj
-  nn_new=t(x1)%*%x4[,2]
-  n_new=nn_new[1]
-  mu_q=((b*c-2*b-c)*sumcheck+c*(yBM..[j]+yBM..[jj])+2*b*yBi..[i])/(b*c*(b-1)*(c-2))
-  beta=c()
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
-    }
-    if(a!=i){
-      beta[a]<-(yBi..[a])/c-mu_q
-    }
-  }
-  mu=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj])/b)-((b-2)*(yBM..[j]+yBM..[jj])/(b-1))-sum(nn_new*beta)+nn_new[i]*beta[i]+((2-(b-1)*nn_new[i])*beta[i])/(b-1))/(n_t+c)
-  mu_RT=(y....-((nn_new[i]-2)*yB...[i])/(c+nn_new[i]-2)-sum((nn_new*yB...)/(c+nn_new))+((nn_new[i])*yB...[i])/(c+nn_new[i]))/(b*c)
-  mu_RB=(y....-((b-1)*(sum(yBM..)-yBM..[j]-yBM..[jj]))/b-((b-2)*(yBM..[j]+yBM..[jj])/(b-1)))/(n_t+c)
-  beta=c()
-  beta_RT=c()
-  taucheck<-c()
-  taucheck_NB<-c()
-  test_tretment<-c()
-  tau_new_RB<-c()
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta[a]<-(b*yBi..[i]-sum(yBM..)+yBM..[j]+yBM..[jj])/(b*(c-2))
-    }
-    if(a!=i){
-      beta[a]<-(yBi..[a])/c-mu_q
-    }
-  }
-  for (a in 1:b) { 
-    if(a==i & a==ii){
-      beta_RT[a]<-(yB...[i])/(c+nn_new[a]-2)-mu_RT
-    }
-    if(a!=i){
-      beta_RT[a]<-(yB...[a])/(c+nn_new[a])-mu_RT
-    }
-  }
-  
-  for (e in 1:c) { 
-    if(e==j){
-      taucheck[e]<-(yBM..[j]+beta[i])/(b-1)-mu
-    }
-    if(e==jj){
-      taucheck[e]<-(yBM..[jj]+beta[i])/(b-1)-mu
-    }
-    if(e!=j & e!=jj){
-      taucheck[e]<-(yBM..[e])/b-mu
-    }
-  }
-  for (e in 1:c) { 
-    if(e==j){
-      taucheck_NB[e]<-yBM..[j]/(b-1)-mu_RB
-    }
-    if(e==jj){
-      taucheck_NB[e]<-yBM..[jj]/(b-1)-mu_RB
-    }
-    if(e!=j & e!=jj){
-      taucheck_NB[e]<-yBM..[e]/b-mu_RB
-    }
-  }
-  xx22=as.matrix(table(obs,1:N))
-  BB<-t(xx22)%*%y
-  AA<-t(xx22)%*%x4[,2]
-  M<-AA*BB
-  MM=M[apply(M!=0, 1, all),] 
-  ff<-c()
-  nnn<-0
-  for(iii in 1:b){
-    for(jjj in nnn+1:nn_new[iii]){ 
-      ff[jjj]=MM[jjj]-beta[iii]-mu
-    }
-    nnn<-nnn+nn_new[iii]
-  }
-  ni<-0
-  for(iii in 1:N){
-    if(AA[iii]==1){
-      ni<-ni+1
-      test_tretment[ni]<-treatment[iii]
-    }
-  }
-  New_Treatment=cbind(test_tretment)
-  n_treatment=ff
-  taunew=cbind(ff)
-  for (h in 1:n_t) {
-    tau_new_RB[h]=MM[h]-mu_RB
-  }
-  taunew_RB=cbind(tau_new_RB)
-  #################################
-  R_full=y....*mu+sum(yB...*beta)+sum(yBM..*taucheck)+sum(yBMjg*n_treatment)
-  R_reduced_B=y....*mu_RB+sum(yBM..*taucheck_NB)+sum(yBMjg*tau_new_RB)
-  R_reduced_Tr=y....*mu_RT+sum(yB...*beta_RT)
-  #################################
-  blockSSadj=R_full- R_reduced_B
+  i=n_block 
+  j=n_check
+  mu_q=((b*c-b-c)*sumcheck+c*(yBM..[j])+b*yBi..[i])/(b*c*(b-1)*(c-1))
+  P=((sum(yBi..^2)-(yBi..[i]^2))/c)+((b*yBi..[i]-(sum(yBM..)-yBM..[j]))*(yBi..[i]+(yBM..[j])/(b-1))/(b*(c-1)))-(mu_q*(sum(yBi..)-yBi..[i]))
+  TT=(sum(yBM..^2)-yBM..[j]^2)/b+yBM..[j]^2/(b-1)+sum(yBMjg^2)-sum(yB...^2/(c+h))+(yB...[i]^2/(c+h[i]))-(yB...[i]^2/(c+h[i]-1))+P
   treatmentSSunadj=sum(y.M..^2/k)-y....^2/(N)
   totalSS=t(y)%*%y-y....^2/(N)
+  blockSSadj=P
   errorSS=totalSS-blockSSadj-treatmentSSunadj
-  checkSS1=(sum(yBM..^2)-yBM..[j]^2-yBM..[jj]^2)/b+(yBM..[j]^2+yBM..[jj]^2)/(b-1)-(sumcheck^2/n_c)
+  checkSS1=(sum(yBM..^2)-yBM..[j]^2)/b+yBM..[j]^2/(b-1)-(sumcheck^2/n_c)
   newSS=sum(yBMjg^2)-(sum(yBMjg))^2/n_t
   new_vs._checkSS1=treatmentSSunadj-checkSS1-newSS
   dfE=N-b-m+1 
@@ -706,20 +490,20 @@ aov2.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check
   F=c(blockF,NA,checkF1,newF,new_vs._checkF1,NA,NA)
   p.value=c(p.value.block,NA,p.value.check,p.value.new,p.value.new_vs._check,NA,NA)
   anova.table=cbind(df,ss,ms,F, p.value)
-  rownames(anova.table)=c("Block(Adj.)","Treatment(Unadj.)","  Check(Unadj.)","  New","  New vs. check","Error","Total")
+  rownames(anova.table)=c("Block(Adj.)_U","Treatment(Unadj.)_U","  Check(Unadj.)_U","  New_U","  New vs. check_U","Error_U","Total_U")
   colnames(anova.table)=c("Df", "Sum Sq","Mean Sq", "F-value","P-value")
   return(anova.table)
 } 
 ########################################
 ######################################## 
-TMC.I.ARIBD = function(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
+OMC.ARIBD_U = function(obs, block, treatment,type, y, n_block , n_check)
 {
-  output1=mu.ARIBD(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
-  output2=Beta.ARIBD(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
-  output3=Check.ARIBD(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
-  output4=New_treatment.ARIBD(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj) 
-  output5=aov1.ARIBD(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
-  output6=aov2.ARIBD(obs, block, treatment,type, y,n_block_i,n_block_ii,n_check_j,n_check_jj)
+  output1=mu.ARIBD(obs, block, treatment,type, y, n_block , n_check) 
+  output2=Beta.ARIBD(obs, block, treatment,type, y, n_block , n_check)
+  output3=Check.ARIBD(obs, block, treatment,type, y, n_block , n_check)
+  output4=New_treatment.ARIBD(obs, block, treatment,type, y, n_block , n_check) 
+  output5=aov1.ARIBD(obs, block, treatment,type, y, n_block , n_check)
+  output6=aov2.ARIBD(obs, block, treatment,type, y, n_block , n_check)
   newlist <- list(output1,output2,output3,output4,output5,output6) 
   return(newlist)
 }
